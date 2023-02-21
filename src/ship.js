@@ -30,10 +30,6 @@ class Ship {
     this.class = shipClass;
     this.size = shipSize;
     this.hits = 0;
-    this.location = {
-      x: null,
-      y: null,
-    };
   }
 
   hit() {
@@ -44,17 +40,8 @@ class Ship {
     return this.hits >= this.size;
   }
 
-  setLocation(xCoordinate, yCoordinate) {
-    this.location.x = xCoordinate;
-    this.location.y = yCoordinate;
-  }
-
   resetShip() {
     this.hits = 0;
-    this.location = {
-      x: null,
-      y: null,
-    };
   }
 }
 
