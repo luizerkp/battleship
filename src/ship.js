@@ -1,35 +1,12 @@
-const getShipClassesArray = () => {
-  const shipClasses = [
-    {
-      class: "Carrier",
-      size: 5,
-    },
-    {
-      class: "Battleship",
-      size: 4,
-    },
-    {
-      class: "Destroyer",
-      size: 3,
-    },
-    {
-      class: "Submarine",
-      size: 3,
-    },
-    {
-      class: "Patrol Boat",
-      size: 2,
-    },
-  ];
-
-  return shipClasses;
-};
+import shipClasses from "./shipClasses";
 
 class Ship {
+  #hits;
+
   constructor(shipClass, shipSize) {
     this.class = shipClass;
     this.size = shipSize;
-    this.hits = 0;
+    this.#hits = 0;
   }
 
   hit() {
@@ -37,20 +14,23 @@ class Ship {
   }
 
   isSunk() {
-    return this.hits >= this.size;
+    return this.#hits >= this.size;
+  }
+
+  getHitsCounter() {
+    return this.#hits;
   }
 
   resetShip() {
-    this.hits = 0;
+    this.#hits = 0;
   }
 }
 
 const shipFactory = () => {
-  const shipClasses = getShipClassesArray();
-  const ships = [];
+  const ships = new Map();
   shipClasses.forEach((ship) => {
     const newShip = new Ship(ship.class, ship.size);
-    ships.push(newShip);
+    ships.set(ship.class, newShip);
   });
   return ships;
 };
