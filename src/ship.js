@@ -1,35 +1,35 @@
 import shipClasses from "./shipClasses";
 
-class Ship {
-  #hits;
+const createShip = (ship) => {
+  let hits = 0;
+  const { shipClass, size } = ship;
 
-  constructor(shipClass, shipSize) {
-    this.class = shipClass;
-    this.size = shipSize;
-    this.#hits = 0;
-  }
+  const hit = () => {
+    hits += 1;
+  };
 
-  hit() {
-    this.hits += 1;
-  }
+  const isSunk = () => hits >= size;
 
-  isSunk() {
-    return this.#hits >= this.size;
-  }
+  const getHitsCounter = () => hits;
 
-  getHitsCounter() {
-    return this.#hits;
-  }
+  const resetShip = () => {
+    hits = 0;
+  };
 
-  resetShip() {
-    this.#hits = 0;
-  }
-}
+  return {
+    getClass: () => shipClass,
+    getSize: () => size,
+    hit,
+    isSunk,
+    getHitsCounter,
+    resetShip,
+  };
+};
 
 const shipFactory = () => {
   const ships = new Map();
   shipClasses.forEach((ship) => {
-    const newShip = new Ship(ship.class, ship.size);
+    const newShip = createShip(ship);
     ships.set(ship.class, newShip);
   });
   return ships;

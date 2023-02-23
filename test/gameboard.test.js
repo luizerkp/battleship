@@ -3,7 +3,6 @@ import Gameboard from "../src/gameboard";
 let board;
 beforeEach(() => {
   board = new Gameboard();
-  board.initBoard();
 });
 
 test("Test Gameboard exist", () => {
@@ -49,12 +48,35 @@ test("Gameboard receives attack", () => {
   expect(board.currentBoard.get(5)[5].isHit).toBe(true);
 });
 
+test("Will not receive attack on a cell that has already been hit", () => {
+  board.placeShip("destroyer", [
+    [0, 0],
+    [0, 1],
+    [0, 2],
+  ]);
+
+  board.receiveAttack([0, 0]);
+  expect(board.receiveAttack([0, 0])).toBe(false);
+});
+
 test("Updates ship hit countter", () => {
-  board.placeShip("destoryer", [
+  board.placeShip("destroyer", [
     [0, 0],
     [0, 1],
     [0, 2],
   ]);
   board.receiveAttack([0, 0]);
   expect(board.ships.get("destroyer").getHitsCounter()).toBe(1);
+});
+
+test("Test accurately reports ship sunk status", () => {
+  board.placeShip("destroyer", [
+    [0, 0],
+    [0, 1],
+    [0, 2],
+  ]);
+  board.receiveAttack([0, 0]);
+  board.receiveAttack([0, 1]);
+  board.receiveAttack([0, 2]);
+  expect(board.ships.get("destroyer").isSunk()).toBe(true);
 });

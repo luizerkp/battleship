@@ -1,17 +1,19 @@
 import shipFactory from "./ship";
 
 class Gameboard {
-  #size;
+  #size = 10;
+
+  #availableSpots = this.#size ** 2;
 
   constructor() {
-    this.currentBoard = new Map();
-    this.#size = 10;
+    this.currentBoard = this.initBoard();
     this.ships = shipFactory();
   }
 
   initBoard() {
+    const board = new Map();
     for (let i = 0; i < this.#size; i += 1) {
-      this.currentBoard.set(
+      board.set(
         i,
         [...new Array(this.#size)].fill().map(() => ({
           isHit: false,
@@ -20,10 +22,15 @@ class Gameboard {
         }))
       );
     }
+    return board;
   }
 
   getBoardSize() {
     return this.#size;
+  }
+
+  hasAvailableSpots() {
+    return this.#availableSpots > 0;
   }
 
   placeShip(shipClass, coordinates) {
@@ -44,7 +51,14 @@ class Gameboard {
     }
 
     const cell = this.currentBoard.get(coordinates[0])[coordinates[1]];
+
+    if (cell.isHit === true) {
+      return false;
+    }
+
     cell.isHit = true;
+    this.#availableSpots -= 1;
+
     if (cell.hasShip) {
       this.ships.get(cell.shipClass).hit();
     }
