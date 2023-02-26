@@ -3,8 +3,6 @@ import shipFactory from "./ship";
 class Gameboard {
   #size = 10;
 
-  #availableSpots = this.#size ** 2;
-
   constructor() {
     this.currentBoard = this.initBoard();
     this.ships = shipFactory();
@@ -29,10 +27,6 @@ class Gameboard {
     return this.#size;
   }
 
-  hasAvailableSpots() {
-    return this.#availableSpots > 0;
-  }
-
   placeShip(shipClass, coordinates) {
     if (!this.#legalMove(coordinates)) {
       return false;
@@ -46,24 +40,30 @@ class Gameboard {
   }
 
   receiveAttack(coordinates) {
+    const results = {
+      attackReceived: false,
+      shipHit: false,
+    };
+
     if (!this.#inBoard([coordinates])) {
-      return false;
+      return results;
     }
 
     const cell = this.currentBoard.get(coordinates[0])[coordinates[1]];
 
     if (cell.isHit === true) {
-      return false;
+      return results;
     }
 
     cell.isHit = true;
-    this.#availableSpots -= 1;
+    results.attackRecieved = true;
 
     if (cell.hasShip) {
       this.ships.get(cell.shipClass).hit();
+      results.shipHit = true;
     }
 
-    return true;
+    return results;
   }
 
   #legalMove(coordinates) {

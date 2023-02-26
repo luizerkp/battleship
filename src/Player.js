@@ -1,6 +1,10 @@
 import Gameboard from "./gameboard";
 
 class Player extends Gameboard {
+  #availabelXCoordinates = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+  #availabelYCoordinates = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
   constructor(name) {
     super();
     this.name = name;
@@ -12,19 +16,28 @@ class Player extends Gameboard {
     return this.lostGame;
   }
 
-  sendAttack(gameBoard, coordinates = null) {}
+  sendAttack(coordinates = null) {
+    const attackCoordinates = coordinates || this.#randomMove();
+    return attackCoordinates;
+  }
 
-  // need to try non-repeating random nums --> may fisher-yates shuffle implementation?
-  #randomMove(gameBoard) {
-    let x = Math.floor(Math.random() * 10);
-    let y = Math.floor(Math.random() * 10);
-    let cell = gameBoard.get(x)[y];
-
-    while (cell.isHit === true && gameBoard.hasAvailableSpots()) {
-      x = Math.floor(Math.random() * 10);
-      y = Math.floor(Math.random() * 10);
-      cell = gameBoard.get(x)[y];
+  // returns a random coordinate that has not be hit; **There is a bug here will not work as expected, need to work on the logic here
+  #randomMove() {
+    if (this.#availabelXCoordinates.length === 0 || this.#availabelYCoordinates.length === 0) {
+      return -1;
     }
+
+    const xIndex = Math.floor(Math.random() * this.#availabelXCoordinates.length);
+    const yIndex = Math.floor(Math.random() * this.#availabelYCoordinates.length);
+
+    // save coordinates
+    const coordinates = [this.#availabelXCoordinates[xIndex], this.#availabelYCoordinates[yIndex]];
+
+    // remove from pool of coordinates
+    this.#availabelXCoordinates.splice(xIndex, 1);
+    this.#availabelYCoordinates.splice(yIndex, 1);
+
+    return coordinates;
   }
 }
 

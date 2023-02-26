@@ -56,7 +56,7 @@ test("Will not receive attack on a cell that has already been hit", () => {
   ]);
 
   board.receiveAttack([0, 0]);
-  expect(board.receiveAttack([0, 0])).toBe(false);
+  expect(board.receiveAttack([0, 0]).attackReceived).toBe(false);
 });
 
 test("Updates ship hit countter", () => {
