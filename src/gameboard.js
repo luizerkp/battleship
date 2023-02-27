@@ -56,7 +56,7 @@ class Gameboard {
     }
 
     cell.isHit = true;
-    results.attackRecieved = true;
+    results.attackReceived = true;
 
     if (cell.hasShip) {
       this.ships.get(cell.shipClass).hit();

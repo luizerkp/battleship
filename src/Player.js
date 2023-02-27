@@ -1,9 +1,7 @@
 import Gameboard from "./gameboard";
 
 class Player extends Gameboard {
-  #availabelXCoordinates = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-  #availabelYCoordinates = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  #previousAttackCoordidates = [];
 
   constructor(name) {
     super();
@@ -21,23 +19,27 @@ class Player extends Gameboard {
     return attackCoordinates;
   }
 
-  // returns a random coordinate that has not be hit; **There is a bug here will not work as expected, need to work on the logic here
+  // returns a random coordinate that has not be hit, **new aproach needs testing
   #randomMove() {
-    if (this.#availabelXCoordinates.length === 0 || this.#availabelYCoordinates.length === 0) {
-      return -1;
+    if (this.#isPreiviousAttackCoordinate.length >= 100) {
+      return null;
     }
 
-    const xIndex = Math.floor(Math.random() * this.#availabelXCoordinates.length);
-    const yIndex = Math.floor(Math.random() * this.#availabelYCoordinates.length);
+    let xCoordinate = Math.floor(Math.random() * 10);
+    let yCoordinate = Math.floor(Math.random() * 10);
 
-    // save coordinates
-    const coordinates = [this.#availabelXCoordinates[xIndex], this.#availabelYCoordinates[yIndex]];
+    while (this.#isPreiviousAttackCoordinate(xCoordinate, yCoordinate) === true) {
+      xCoordinate = Math.floor(Math.random() * 10);
+      yCoordinate = Math.floor(Math.random() * 10);
+    }
+    const attackCoordinates = [xCoordinate, yCoordinate];
+    this.#isPreiviousAttackCoordinate.push(attackCoordinates);
 
-    // remove from pool of coordinates
-    this.#availabelXCoordinates.splice(xIndex, 1);
-    this.#availabelYCoordinates.splice(yIndex, 1);
+    return attackCoordinates;
+  }
 
-    return coordinates;
+  #isPreiviousAttackCoordinate(x, y) {
+    return this.#isPreiviousAttackCoordinate.some((coordinate) => coordinate[0] === x && coordinate[1] === y);
   }
 }
 
