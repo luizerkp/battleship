@@ -1,22 +1,22 @@
 const shipClasses = [
   {
-    class: "carrier",
+    shipClass: "carrier",
     size: 5,
   },
   {
-    class: "battleship",
+    shipClass: "battleship",
     size: 4,
   },
   {
-    class: "destroyer",
+    shipClass: "destroyer",
     size: 3,
   },
   {
-    class: "submarine",
+    shipClass: "submarine",
     size: 3,
   },
   {
-    class: "patrol boat",
+    shipClass: "patrol boat",
     size: 2,
   },
 ];

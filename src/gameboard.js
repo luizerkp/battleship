@@ -28,7 +28,7 @@ class Gameboard {
   }
 
   placeShip(shipClass, coordinates) {
-    if (!this.#legalMove(coordinates)) {
+    if (!shipClass || !Array.isArray(coordinates) || !this.#inBoard(coordinates)) {
       return false;
     }
 
@@ -66,20 +66,9 @@ class Gameboard {
     return results;
   }
 
-  #legalMove(coordinates) {
-    const isInBoard = this.#inBoard(coordinates);
-    const hasCollision = this.#collision(coordinates);
-    return isInBoard && !hasCollision;
-  }
-
   #inBoard(coordinates) {
     const inBoard = coordinates.every((coordinate) => coordinate.every((axis) => axis >= 0 && axis <= this.#size - 1));
     return inBoard;
-  }
-
-  #collision(coordinates) {
-    const collision = coordinates.some((coordinate) => this.currentBoard.get(coordinate[0])[coordinate[1]].hasShip);
-    return collision;
   }
 }
 

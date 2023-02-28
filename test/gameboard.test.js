@@ -24,25 +24,6 @@ test("Places destroyer at at coordinates [[0,0], [0,1], [0,2]]", () => {
   expect(board.currentBoard.get(0)[2].hasShip).toBe(true);
 });
 
-test("Test Collisions", () => {
-  expect(
-    board.placeShip("destoryer", [
-      [0, 0],
-      [0, 1],
-      [0, 2],
-    ])
-  ).toBe(true);
-  expect(
-    board.placeShip("carrier", [
-      [0, 0],
-      [1, 0],
-      [2, 0],
-      [3, 0],
-      [4, 0],
-    ])
-  ).toBe(false);
-});
-
 test("Gameboard receives attack", () => {
   board.receiveAttack([5, 5]);
   expect(board.currentBoard.get(5)[5].isHit).toBe(true);

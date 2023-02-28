@@ -30,7 +30,7 @@ const shipFactory = () => {
   const ships = new Map();
   shipClasses.forEach((ship) => {
     const newShip = createShip(ship);
-    ships.set(ship.class, newShip);
+    ships.set(ship.shipClass, newShip);
   });
   return ships;
 };
