@@ -29,6 +29,7 @@
         { 
           "props": false 
         }
-      ]
+      ],
+      "class-methods-use-this": ["error", { "exceptMethods": ["#arrayEquals"] }] 
     }
 }

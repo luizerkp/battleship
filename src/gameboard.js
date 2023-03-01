@@ -39,6 +39,11 @@ class Gameboard {
     return true;
   }
 
+  allShipsSunk() {
+    const ships = Array.from(this.ships.values());
+    return ships.every((ship) => ship.isSunk() === true);
+  }
+
   receiveAttack(coordinates) {
     const results = {
       attackReceived: false,

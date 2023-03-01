@@ -1,7 +1,7 @@
 import Gameboard from "./gameboard";
 
 class Player extends Gameboard {
-  // array to keep track of previous attack coodinates to reduce coupling bewteen player1 gameboard and player gameboard. This allow player1 one AI to make attacks without having to know player2's gameboard state.
+  // array to keep track of previous attack coodinates to reduce coupling bewteen player1 gameboard and player gameboard. This allows all Players to make attacks without having to know the each other's gameboard state.
   #previousAttackCoordinatesArr = [];
 
   constructor(name) {
@@ -10,7 +10,6 @@ class Player extends Gameboard {
   }
 
   initAutoShipPlacement() {
-    // console.log(this.ships);
     this.ships.forEach((ship) => {
       const shipSize = ship.getSize();
       const shipClass = ship.getClass();
@@ -22,16 +21,24 @@ class Player extends Gameboard {
         randomCoordinate = [Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)];
         placementCoordinates = this.#generateRandomCoordinateSet(randomCoordinate, shipSize);
       }
-      // console.log(shipClass, placementCoordinates);
+
       this.placeShip(shipClass, placementCoordinates);
     });
   }
 
-  hasNoShips() {
-    const ships = Array.from(this.ships.values());
-    this.lostGame = ships.every((ship) => ship.isSunk() === true);
-    return this.lostGame;
-  }
+  // method is used for debugging will remove later
+  // checkShipStatus() {
+  //   const shipStatus = [];
+  //   this.ships.forEach((ship) => {
+  //     const status = {
+  //       shipClass: ship.getClass(),
+  //       sunk: ship.isSunk(),
+  //       shipSize: ship.getSize(),
+  //     };
+  //     shipStatus.push(status);
+  //   });
+  //   return shipStatus;
+  // }
 
   sendAttack(coordinates = null) {
     const attackCoordinates = coordinates || this.#randomMove();
@@ -47,22 +54,23 @@ class Player extends Gameboard {
     let xCoordinate = Math.floor(Math.random() * 10);
     let yCoordinate = Math.floor(Math.random() * 10);
 
-    while (this.#isPreiviousAttackCoordinate(xCoordinate, yCoordinate) === true) {
+    while (this.#isPreiviousAttackCoordinate(xCoordinate, yCoordinate)) {
       xCoordinate = Math.floor(Math.random() * 10);
       yCoordinate = Math.floor(Math.random() * 10);
     }
-    const attackCoordinates = [yCoordinate, xCoordinate];
+    const attackCoordinates = [xCoordinate, yCoordinate];
     this.#previousAttackCoordinatesArr.push(attackCoordinates);
 
     return attackCoordinates;
   }
 
   #isPreiviousAttackCoordinate(x, y) {
-    return this.#previousAttackCoordinatesArr.some((coordinate) => coordinate[0] === x && coordinate[1] === y);
+    return this.#previousAttackCoordinatesArr.some((coordinate) => this.#arrayEquals(coordinate, [x, y]));
   }
 
   #generateRandomCoordinateSet(coordinate, shipSize) {
     const boardSize = this.getBoardSize();
+
     const verticalSet = () => {
       const placementCoordinates = [];
       for (let i = 0; i < shipSize; i += 1) {
@@ -92,6 +100,10 @@ class Player extends Gameboard {
   #collision(coordinates) {
     const collision = coordinates.some((coordinate) => this.currentBoard.get(coordinate[0])[coordinate[1]].hasShip);
     return collision;
+  }
+
+  #arrayEquals(arr1, arr2) {
+    return arr1.length === arr2.length && arr1.every((val, index) => val === arr2[index]);
   }
 }
 
