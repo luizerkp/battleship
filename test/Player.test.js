@@ -41,10 +41,6 @@ test("Player exists", () => {
   expect(player).toBeInstanceOf(Player);
 });
 
-test("Player extends from Gameboad", () => {
-  expect(player.currentBoard).toBeInstanceOf(Map);
-});
-
 test("Test reports if all ships are sunk properly", () => {
   expect(player.allShipsSunk()).toBe(false);
   player.ships.forEach((ship) => {

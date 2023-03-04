@@ -39,6 +39,23 @@ class Gameboard {
     return true;
   }
 
+  initAutoShipPlacement() {
+    this.ships.forEach((ship) => {
+      const shipSize = ship.getSize();
+      const shipClass = ship.getClass();
+
+      let randomCoordinate = [Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)];
+      let placementCoordinates = this.#generateRandomCoordinateSet(randomCoordinate, shipSize);
+
+      while (this.#collision(placementCoordinates)) {
+        randomCoordinate = [Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)];
+        placementCoordinates = this.#generateRandomCoordinateSet(randomCoordinate, shipSize);
+      }
+
+      this.placeShip(shipClass, placementCoordinates);
+    });
+  }
+
   allShipsSunk() {
     const ships = Array.from(this.ships.values());
     return ships.every((ship) => ship.isSunk() === true);
@@ -69,6 +86,40 @@ class Gameboard {
     }
 
     return results;
+  }
+
+  #generateRandomCoordinateSet(coordinate, shipSize) {
+    const boardSize = this.getBoardSize();
+
+    const verticalSet = () => {
+      const placementCoordinates = [];
+      for (let i = 0; i < shipSize; i += 1) {
+        const yCoordinate = coordinate[0] + shipSize > boardSize - 1 ? coordinate[0] - i : coordinate[0] + i;
+        const xCoordinate = coordinate[1];
+
+        placementCoordinates.push([yCoordinate, xCoordinate]);
+      }
+      return placementCoordinates;
+    };
+
+    const horizontalSet = () => {
+      const placementCoordinates = [];
+      for (let i = 0; i < shipSize; i += 1) {
+        const yCoordinate = coordinate[0];
+        const xCoordinate = coordinate[1] + shipSize > boardSize - 1 ? coordinate[1] - i : coordinate[1] + i;
+
+        placementCoordinates.push([yCoordinate, xCoordinate]);
+      }
+      return placementCoordinates;
+    };
+    const shipCoordinates = Math.floor(Math.random() * 2) ? verticalSet() : horizontalSet();
+
+    return shipCoordinates;
+  }
+
+  #collision(coordinates) {
+    const collision = coordinates.some((coordinate) => this.currentBoard.get(coordinate[0])[coordinate[1]].hasShip);
+    return collision;
   }
 
   #inBoard(coordinates) {
