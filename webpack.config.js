@@ -23,7 +23,7 @@ module.exports = {
       },
     }),
     new HtmlWebpackPlugin({
-      template: "src/index.html",
+      template: "./src/index.html",
     }),
   ],
   devtool: "inline-source-map",
@@ -46,7 +46,7 @@ module.exports = {
         use: ["html-loader"],
       },
       {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        test: /\.(png|svg|jpg|jpeg|gif|ico)$/i,
         type: "asset/resource",
       },
       {

@@ -3,19 +3,30 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: #f1eeee;
     font-family: 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
+    background: linear-gradient(315deg, transparent 75%, #585E5E 0)-10px 0,
+    linear-gradient(45deg, transparent 75%, #585E5E 0)-10px 0,
+    linear-gradient(135deg, #444040 75%, transparent 0) 0 0,
+    linear-gradient(45deg, #696565 75%, #494544 0) 0 0 #561a16;
+    background-size: 15px 15px;
 } 
 
 .header {
-  height: 100px;
-  background-color: black;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+
 }
 
 #main-container {
   flex: 1 0 auto;
-  background-color: white;
 }
+
+/* .gameboard {
+
+} */
 
 /* Sticky Footer and credit */
 .footer {
@@ -26,8 +37,7 @@ body {
     height: 50px;
     gap: 8px;
     font-weight: bold;
-    color: black;
-    background-color: #0c4a6e;
+    color: white;
 }
 
 #github-logo {
