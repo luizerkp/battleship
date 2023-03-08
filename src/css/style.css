@@ -22,12 +22,22 @@ body {
 
 #main-container {
   flex: 1 0 auto;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
 }
 
-/* .gameboard {
-
-} */
-
+.gameboard {
+  display: grid;
+  width: 30vw;
+  height: 30vw;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: auto;
+}
+.cell {
+  border: solid 4px black;
+  background-color: white;
+}
 /* Sticky Footer and credit */
 .footer {
     display: flex;
