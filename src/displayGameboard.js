@@ -8,23 +8,28 @@ const buildCellInfo = (x, y) => {
 
 const playerOneGameboardDisplay = (() => {
   const playerOneGameboard = document.querySelector("[data-player1]");
-  const start = (size) => {
+  const playerPrompts = document.querySelector(".player-prompts");
+
+  const initialize = ({ size, name }) => {
     for (let x = 0; x < size; x += 1) {
       for (let y = 0; y < size; y += 1) {
         const currentCell = buildCellInfo(x, y);
         playerOneGameboard.appendChild(currentCell);
       }
     }
+    playerOneGameboard.classList.add("active");
+    playerPrompts.textContent = `Hello, admiral ${name} would you like to place your warships?`;
+    playerPrompts.classList.remove("hidden");
   };
 
   return {
-    start,
+    initialize,
   };
 })();
 
 const playerTwoGameboardDisplay = (() => {
   const playerTwoGameboard = document.querySelector("[data-player2");
-  const start = (size) => {
+  const initialize = (size) => {
     for (let x = 0; x < size; x += 1) {
       for (let y = 0; y < size; y += 1) {
         const currentCell = buildCellInfo(x, y);
@@ -34,7 +39,7 @@ const playerTwoGameboardDisplay = (() => {
   };
 
   return {
-    start,
+    initialize,
   };
 })();
 
