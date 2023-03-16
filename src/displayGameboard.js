@@ -1,3 +1,5 @@
+import writeTextOneCharEachTime from "../helpers";
+
 const buildCellInfo = (x, y) => {
   const cellDiv = document.createElement("div");
   cellDiv.classList.add("cell");
@@ -10,7 +12,7 @@ const playerOneGameboardDisplay = (() => {
   const playerOneGameboard = document.querySelector("[data-player1]");
   const playerPrompts = document.querySelector(".player-prompts");
 
-  const initialize = ({ size, name }) => {
+  const initialize = async (size) => {
     for (let x = 0; x < size; x += 1) {
       for (let y = 0; y < size; y += 1) {
         const currentCell = buildCellInfo(x, y);
@@ -18,12 +20,24 @@ const playerOneGameboardDisplay = (() => {
       }
     }
     playerOneGameboard.classList.add("active");
-    playerPrompts.textContent = `Hello, admiral ${name} would you like to place your warships?`;
     playerPrompts.classList.remove("hidden");
+  };
+
+  const displayMessagePrompt = async (message) => {
+    playerPrompts.textContent = "";
+    await writeTextOneCharEachTime(playerPrompts, message);
+
+    // wait for 2 seconds before returning
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 2000);
+    });
   };
 
   return {
     initialize,
+    displayMessagePrompt,
   };
 })();
 
