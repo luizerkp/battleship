@@ -1,6 +1,6 @@
 import Player from "./Player";
 import { playerOneGameboardDisplay, playerTwoGameboardDisplay } from "./displayGameboard";
-import playerBoardHoverEvents from "./events";
+import playerBoardEvents from "./events";
 
 const gameLoop = (() => {
   const initializeComputer = () => {
@@ -13,7 +13,7 @@ const gameLoop = (() => {
     playerBoard.dataset.placeShip = shipsNames[0].toLowerCase();
     const testmsg = `Please dispatch your ${shipsNames[0]}`;
     await playerOneGameboardDisplay.displayMessagePrompt(testmsg);
-    playerBoardHoverEvents.shipPlacement();
+    playerBoardEvents.shipPlacement();
   };
 
   const initializePlayer = async (name) => {

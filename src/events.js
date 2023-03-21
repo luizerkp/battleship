@@ -61,7 +61,7 @@ const handleShipPlacement = (e) => {
   }
 };
 
-const playerBoardHoverEvents = (() => {
+const playerBoardEvents = (() => {
   const playerGameboardCells = document.querySelector("[data-player1]").childNodes;
   const shipPlacement = () => {
     playerGameboardCells.forEach((cell) => {
@@ -73,4 +73,4 @@ const playerBoardHoverEvents = (() => {
   };
 })();
 
-export default playerBoardHoverEvents;
+export default playerBoardEvents;
