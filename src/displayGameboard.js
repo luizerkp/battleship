@@ -24,14 +24,16 @@ const playerOneGameboardDisplay = (() => {
   };
 
   const displayMessagePrompt = async (message) => {
+    document.body.classList.add("wait");
+
     playerPrompts.textContent = "";
     await writeTextOneCharEachTime(playerPrompts, message);
 
     // wait for 2 seconds before returning
     await new Promise((resolve) => {
       setTimeout(() => {
-        resolve();
-      }, 2000);
+        resolve(document.body.classList.remove("wait"));
+      }, 1000);
     });
   };
 

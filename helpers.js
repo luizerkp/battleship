@@ -10,7 +10,7 @@ const writeTextOneCharEachTime = async (element, content) => {
         clearInterval(interval);
         resolve();
       }
-    }, 75);
+    }, 70);
   });
 };
 
