@@ -1,4 +1,5 @@
 import shipClasses from "./shipClasses";
+import { updateCurrentMatrix } from "./Matrix";
 
 const ships = {};
 
@@ -9,7 +10,9 @@ shipClasses.forEach((ship) => {
 });
 
 const handleHover = ({ siblings, shipSize, e }) => {
-  if (siblings.length === shipSize) {
+  const collision = siblings.some((sibling) => sibling.classList.contains("has-ship"));
+
+  if (siblings.length === shipSize && !collision) {
     siblings.forEach((sibling) => {
       if (e.type === "mouseenter") {
         sibling.classList.add("highlight");
@@ -30,18 +33,18 @@ const handleHover = ({ siblings, shipSize, e }) => {
   }
 };
 
-const handleClick = (cells) => {
+const handleClick = async (cells) => {
   const cellMatrix = [];
   cells.forEach((cell) => {
     const x = parseInt(cell.dataset.x, 10);
     const y = parseInt(cell.dataset.y, 10);
     cellMatrix.push([x, y]);
   });
-  console.log(cellMatrix);
+  await updateCurrentMatrix(cellMatrix);
 };
 
 const handleShipPlacement = (e) => {
-  const currentShip = document.querySelector("[data-player1]").dataset.placeShip;
+  const currentShip = document.querySelector("[data-playerOne]").dataset.placeShip;
   const targetCell = e.target;
   const siblingGroup = [];
   let x = parseInt(targetCell.dataset.x, 10);
@@ -56,14 +59,18 @@ const handleShipPlacement = (e) => {
     handleHover({ siblings: siblingGroup, shipSize: ships[currentShip], e });
   }
 
-  if (e.type === "click" && siblingGroup.length === ships[currentShip]) {
+  const canPlace =
+    siblingGroup.length === ships[currentShip] &&
+    !siblingGroup.some((sibling) => sibling.classList.contains("has-ship"));
+
+  if (e.type === "click" && canPlace) {
     handleClick(siblingGroup);
   }
 };
 
 const playerBoardEvents = (() => {
-  const playerGameboardCells = document.querySelector("[data-player1]").childNodes;
-  const shipPlacement = () => {
+  const playerGameboardCells = document.querySelector("[data-playerOne]").childNodes;
+  const shipPlacement = async () => {
     playerGameboardCells.forEach((cell) => {
       ["mouseenter", "mouseleave", "click"].forEach((e) => cell.addEventListener(e, handleShipPlacement));
     });

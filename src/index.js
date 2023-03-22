@@ -13,7 +13,7 @@ const handleNameInputEvent = () => {
     return;
   }
   modal.classList.add("hidden");
-  gameLoop.initializePlayer(nameInput.value);
+  gameLoop.initializeGame({ playerOneName: nameInput.value, playerTwoName: "computer" });
 
   // remove event after initializing player
   beginBtn.removeEventListener("click", handleNameInputEvent);

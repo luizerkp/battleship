@@ -1,4 +1,4 @@
-import writeTextOneCharEachTime from "../helpers";
+import writeTextOneCharEachTime from "./helpers";
 
 const buildCellInfo = (x, y) => {
   const cellDiv = document.createElement("div");
@@ -9,7 +9,7 @@ const buildCellInfo = (x, y) => {
 };
 
 const playerOneGameboardDisplay = (() => {
-  const playerOneGameboard = document.querySelector("[data-player1]");
+  const playerOneGameboard = document.querySelector("[data-playerOne]");
   const playerPrompts = document.querySelector(".player-prompts");
 
   const initialize = async (size) => {
@@ -37,14 +37,28 @@ const playerOneGameboardDisplay = (() => {
     });
   };
 
+  const displayShipPlacement = async (coordinates) => {
+    const coodinateDivs = [];
+    coordinates.forEach((coordinate) => {
+      const currentDiv = document.querySelector(`.cell[data-x="${coordinate[0]}"][data-y="${coordinate[1]}"]`);
+      coodinateDivs.push(currentDiv);
+    });
+
+    coodinateDivs.forEach((div) => {
+      div.dataset.hasShip = "";
+      div.classList.add("has-ship");
+    });
+  };
+
   return {
     initialize,
     displayMessagePrompt,
+    displayShipPlacement,
   };
 })();
 
 const playerTwoGameboardDisplay = (() => {
-  const playerTwoGameboard = document.querySelector("[data-player2");
+  const playerTwoGameboard = document.querySelector("[data-playerTwo]");
   const initialize = (size) => {
     for (let x = 0; x < size; x += 1) {
       for (let y = 0; y < size; y += 1) {

@@ -1,23 +1,42 @@
 import Player from "./Player";
 import { playerOneGameboardDisplay, playerTwoGameboardDisplay } from "./displayGameboard";
 import playerBoardEvents from "./events";
+import { getCurrentMatrix } from "./Matrix";
 
-const gameLoop = (() => {
-  const initializeComputer = () => {
-    const computer = new Player("computer");
-    playerTwoGameboardDisplay.initialize(computer.getBoardSize());
-    // computer.initAutoShipPlacement();
-  };
-  const placeShips = async (shipsNames) => {
-    const playerBoard = document.querySelector("[data-player1]");
-    playerBoard.dataset.placeShip = shipsNames[0].toLowerCase();
-    const testmsg = `Please dispatch your ${shipsNames[0]}`;
+const playerOne = (() => {
+  let humanPlayer = null;
+
+  const placeShip = async (shipName) => {
+    const playerBoard = document.querySelector("[data-playerOne]");
+    playerBoard.dataset.placeShip = shipName.toLowerCase();
+    const testmsg = `Please dispatch your ${shipName}`;
     await playerOneGameboardDisplay.displayMessagePrompt(testmsg);
-    playerBoardEvents.shipPlacement();
+    await playerBoardEvents.shipPlacement();
+    const coodinates = await getCurrentMatrix();
+    humanPlayer.placeShip(shipName, coodinates);
+    console.log(humanPlayer.currentBoard);
+    await playerOneGameboardDisplay.displayShipPlacement(coodinates);
   };
 
-  const initializePlayer = async (name) => {
-    const humanPlayer = new Player(name);
+  // use recursive call to avoid eslint no-await-in-loop error
+  const placeShips = async (shipNames) => {
+    // base case shipNames arr empty
+    if (shipNames.length === 0) {
+      return;
+    }
+
+    // use object destructuring to get the next ship in line and an array of remainingShipNames
+    const [currentShipName, ...remainingShipNames] = shipNames;
+    try {
+      await placeShip(currentShipName);
+    } catch (error) {
+      console.log(error);
+    }
+    await placeShips(remainingShipNames);
+  };
+
+  const initialize = async (name) => {
+    humanPlayer = new Player(name);
     const shipsNames = Array.from(humanPlayer.ships.keys());
     const greeting = `Welcome, admiral ${humanPlayer.name}, it is time to dispatch your warships`;
     await playerOneGameboardDisplay.initialize(humanPlayer.getBoardSize());
@@ -26,8 +45,31 @@ const gameLoop = (() => {
   };
 
   return {
-    initializePlayer,
-    initializeComputer,
+    initialize,
+  };
+})();
+
+const playerTwo = (() => {
+  let computer = null;
+  const initialize = () => {
+    computer = new Player("computer");
+    playerTwoGameboardDisplay.initialize(computer.getBoardSize());
+    computer.initAutoShipPlacement();
+  };
+
+  return {
+    initialize,
+  };
+})();
+
+const gameLoop = (() => {
+  const initializeGame = ({ playerOneName, PlayerTwoName }) => {
+    playerOne.initialize(playerOneName);
+    playerTwo.initialize(PlayerTwoName);
+  };
+
+  return {
+    initializeGame,
   };
 })();
 
