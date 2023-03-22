@@ -27,7 +27,7 @@ class Gameboard {
     return this.#size;
   }
 
-  placeShip(shipClass, coordinates) {
+  placeShipOnBoard(shipClass, coordinates) {
     if (!shipClass || !Array.isArray(coordinates) || !this.#inBoard(coordinates)) {
       return false;
     }
@@ -52,7 +52,7 @@ class Gameboard {
         placementCoordinates = this.#generateRandomCoordinateSet(randomCoordinate, shipSize);
       }
 
-      this.placeShip(shipClass, placementCoordinates);
+      this.placeShipOnBoard(shipClass, placementCoordinates);
     });
   }
 

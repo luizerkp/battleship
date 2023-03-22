@@ -13,8 +13,16 @@ const playerOne = (() => {
     await playerOneGameboardDisplay.displayMessagePrompt(testmsg);
     await playerBoardEvents.shipPlacement();
     const coodinates = await getCurrentMatrix();
-    humanPlayer.placeShip(shipName, coodinates);
+
+    // trys to update player's currentBoard property
+    const success = humanPlayer.placeShipOnBoard(shipName, coodinates);
     console.log(humanPlayer.currentBoard);
+
+    // throw error if humanPlayer.placeShipOnBoard returns false;
+    if (!success) {
+      throw new Error("Unable to uodate player gameboard");
+    }
+
     await playerOneGameboardDisplay.displayShipPlacement(coodinates);
   };
 
