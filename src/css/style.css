@@ -38,6 +38,7 @@ body {
   grid-template-rows: auto;
   visibility: hidden;
   transition: visivility 300ms ease-in-out, transform 350ms ease-in-out;
+  cursor: pointer;
 }
 
 .cell {

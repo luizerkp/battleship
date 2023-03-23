@@ -1,5 +1,5 @@
 import shipClasses from "./shipClasses";
-import { updateCurrentMatrix } from "./Matrix";
+import { updateCurrentcoordinates } from "./coordinates";
 
 const ships = {};
 
@@ -34,13 +34,13 @@ const handleHover = ({ siblings, shipSize, e }) => {
 };
 
 const handleClick = async (cells) => {
-  const cellMatrix = [];
+  const cellCoordinates = [];
   cells.forEach((cell) => {
     const x = parseInt(cell.dataset.x, 10);
     const y = parseInt(cell.dataset.y, 10);
-    cellMatrix.push([x, y]);
+    cellCoordinates.push([x, y]);
   });
-  await updateCurrentMatrix(cellMatrix);
+  await updateCurrentcoordinates(cellCoordinates);
 };
 
 const handleShipPlacement = (e) => {

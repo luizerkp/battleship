@@ -1,8 +1,9 @@
 import { handleShipPlacement, directionSelectButtonClickHandler } from "./shipPlacement";
+import handleAttack from "./attacHandler";
 
 const playerBoardEvents = (() => {
   const playerOneGameboardCells = document.querySelector("[data-playerOne]").childNodes;
-  // const playerTwoGameboardCells = document.querySelector("[data-playerTwo]").childNodes;
+  const playerTwoGameboardCells = document.querySelector("[data-playerTwo]").childNodes;
   const verticalBtn = document.querySelector("[data-vertical]");
   const horisontalBtn = document.querySelector("[data-horizontal]");
 
@@ -24,13 +25,16 @@ const playerBoardEvents = (() => {
     horisontalBtn.removeEventListener("click", directionSelectButtonClickHandler);
   };
 
-  // const addPlayerOneAttackEvents = () => {
-
-  // }
+  const addAttackEvents = async () => {
+    playerTwoGameboardCells.forEach((cell) => {
+      cell.addEventListener("click", handleAttack);
+    });
+  };
 
   return {
     addShipPlacementEvents,
     removeShipPlacementEvents,
+    addAttackEvents,
   };
 })();
 

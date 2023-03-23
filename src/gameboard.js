@@ -56,7 +56,7 @@ class Gameboard {
     });
   }
 
-  allShipsSunk() {
+  checkAllShipsSunk() {
     const ships = Array.from(this.ships.values());
     return ships.every((ship) => ship.isSunk() === true);
   }

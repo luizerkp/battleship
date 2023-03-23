@@ -9,8 +9,8 @@ class Player extends Gameboard {
     this.name = name;
   }
 
-  sendAttack(coordinates = null) {
-    const attackCoordinates = coordinates || this.#randomMove();
+  sendRandomAttack() {
+    const attackCoordinates = this.#randomMove();
     return attackCoordinates;
   }
 
