@@ -19,7 +19,11 @@
       <img src="/src/imgs/headerImage.webp" alt="Logo that says Battleship">
     </header>
     <div id="main-container">
-      <div class="player-prompts hidden"></div>
+      <div class="player-prompts hidden" data-prompts></div>
+      <div class="direction-select hidden" data-direction>
+        <button type="button" class="direction" id="selected" value="yDirection" data-vertical data-selected>Vertical</button>
+        <button type="button" class="direction" data-horizontal value="xDirection">Horizontal</button>
+      </div>
       <div class="game-container">
         <div class="gameboard" data-playerOne></div>
         <div class="gameboard" data-playerTwo></div>        

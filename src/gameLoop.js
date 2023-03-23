@@ -1,7 +1,20 @@
 import Player from "./Player";
-import { playerOneGameboardDisplay, playerTwoGameboardDisplay } from "./displayGameboard";
+import { playerOneGameboardDisplay, playerTwoGameboardDisplay, clearShipPlacementDisplayUI } from "./displayGameboard";
 import playerBoardEvents from "./events";
 import { getCurrentMatrix } from "./Matrix";
+
+const playerTwo = (() => {
+  let computer = null;
+  const initialize = () => {
+    computer = new Player("computer");
+    playerTwoGameboardDisplay.initialize(computer.getBoardSize());
+    computer.initAutoShipPlacement();
+  };
+
+  return {
+    initialize,
+  };
+})();
 
 const playerOne = (() => {
   let humanPlayer = null;
@@ -11,7 +24,7 @@ const playerOne = (() => {
     playerBoard.dataset.placeShip = shipName.toLowerCase();
     const testmsg = `Please dispatch your ${shipName}`;
     await playerOneGameboardDisplay.displayMessagePrompt(testmsg);
-    await playerBoardEvents.shipPlacement();
+    await playerBoardEvents.addShipPlacementEvents();
     const coodinates = await getCurrentMatrix();
 
     // trys to update player's currentBoard property
@@ -28,8 +41,10 @@ const playerOne = (() => {
 
   // use recursive call to avoid eslint no-await-in-loop error
   const placeShips = async (shipNames) => {
-    // base case shipNames arr empty
     if (shipNames.length === 0) {
+      playerTwoGameboardDisplay.activateGameboard();
+      clearShipPlacementDisplayUI();
+      playerBoardEvents.removeShipPlacementEvents();
       return;
     }
 
@@ -50,19 +65,6 @@ const playerOne = (() => {
     await playerOneGameboardDisplay.initialize(humanPlayer.getBoardSize());
     await playerOneGameboardDisplay.displayMessagePrompt(greeting);
     placeShips(shipsNames);
-  };
-
-  return {
-    initialize,
-  };
-})();
-
-const playerTwo = (() => {
-  let computer = null;
-  const initialize = () => {
-    computer = new Player("computer");
-    playerTwoGameboardDisplay.initialize(computer.getBoardSize());
-    computer.initAutoShipPlacement();
   };
 
   return {

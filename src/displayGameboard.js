@@ -10,7 +10,8 @@ const buildCellInfo = (x, y) => {
 
 const playerOneGameboardDisplay = (() => {
   const playerOneGameboard = document.querySelector("[data-playerOne]");
-  const playerPrompts = document.querySelector(".player-prompts");
+  const playerPrompts = document.querySelector("[data-prompts]");
+  const directionSelect = document.querySelector("[data-direction]");
 
   const initialize = async (size) => {
     for (let x = 0; x < size; x += 1) {
@@ -21,6 +22,7 @@ const playerOneGameboardDisplay = (() => {
     }
     playerOneGameboard.classList.add("active");
     playerPrompts.classList.remove("hidden");
+    directionSelect.classList.remove("hidden");
   };
 
   const displayMessagePrompt = async (message) => {
@@ -68,9 +70,21 @@ const playerTwoGameboardDisplay = (() => {
     }
   };
 
+  const activateGameboard = () => {
+    playerTwoGameboard.classList.add("active");
+  };
+
   return {
     initialize,
+    activateGameboard,
   };
 })();
 
-export { playerOneGameboardDisplay, playerTwoGameboardDisplay };
+const clearShipPlacementDisplayUI = () => {
+  const playerPrompts = document.querySelector(".player-prompts");
+  playerPrompts.textContent = "";
+  const directionSelectDiv = document.querySelector(".direction-select");
+  directionSelectDiv.classList.add("hidden");
+};
+
+export { playerOneGameboardDisplay, playerTwoGameboardDisplay, clearShipPlacementDisplayUI };
