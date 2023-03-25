@@ -1,5 +1,6 @@
 import shipClasses from "./shipClasses";
 import { updateCurrentcoordinates } from "./coordinates";
+import { resetDisplayAfterShake } from "./helpers";
 
 const ships = {};
 
@@ -79,6 +80,12 @@ const handleShipPlacement = (e) => {
 
   if (e.type === "click" && canPlace) {
     handleClick(siblingGroup);
+  }
+
+  if (e.type === "click" && !canPlace) {
+    const playerGameboard = document.querySelector("[data-playerOne]");
+    playerGameboard.addEventListener("webkitAnimationEnd", resetDisplayAfterShake);
+    playerGameboard.classList.add("shake");
   }
 };
 

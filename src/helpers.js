@@ -14,4 +14,24 @@ const writeTextOneCharEachTime = async (element, content) => {
   });
 };
 
-export default writeTextOneCharEachTime;
+const removeShakeAniamtionClass = (e) => {
+  e.target.classList.remove("shake");
+};
+
+const removeNotPlaceAbleClass = async (e) => {
+  setTimeout(async () => {
+    e.target.childNodes.forEach((node) => {
+      node.classList.remove("not-placeable");
+    });
+  }, 1000);
+};
+
+const resetDisplayAfterShake = (e) => {
+  removeShakeAniamtionClass(e);
+  // if browsing on a mobile device remove red background from clicked cells
+  if (window.matchMedia("(any-pointer:coarse)").matches) {
+    removeNotPlaceAbleClass(e);
+  }
+};
+
+export { writeTextOneCharEachTime, resetDisplayAfterShake };

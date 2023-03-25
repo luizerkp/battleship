@@ -1,4 +1,4 @@
-import writeTextOneCharEachTime from "./helpers";
+import { writeTextOneCharEachTime } from "./helpers";
 
 const buildCellInfo = (x, y) => {
   const cellDiv = document.createElement("div");

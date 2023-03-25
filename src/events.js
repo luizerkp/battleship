@@ -1,5 +1,5 @@
 import { handleShipPlacement, directionSelectButtonClickHandler } from "./shipPlacement";
-import handleAttack from "./attacHandler";
+import handleAttack from "./attackHandler";
 
 const playerBoardEvents = (() => {
   const playerOneGameboardCells = document.querySelector("[data-playerOne]").childNodes;
