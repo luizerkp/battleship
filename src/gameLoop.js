@@ -1,5 +1,5 @@
 import Player from "./Player";
-import { playerOneGameboardDisplay, playerTwoGameboardDisplay, clearShipPlacementDisplayUI } from "./displayGameboard";
+import { playerOneGameboardDisplay, playerTwoGameboardDisplay, userPrompts } from "./displayGameboard";
 import playerBoardEvents from "./events";
 import { getCurrentcoordinates } from "./coordinates";
 
@@ -10,6 +10,7 @@ const playerTwo = (() => {
     computer = new Player("computer");
     playerTwoGameboardDisplay.initialize(computer.getBoardSize());
     computer.initAutoShipPlacement();
+    // console.log(computer.currentBoard);
   };
 
   const checkLost = () => computer.checkAllShipsSunk();
@@ -33,13 +34,13 @@ const playerOne = (() => {
     const playerBoard = document.querySelector("[data-playerOne]");
     playerBoard.dataset.placeShip = shipName.toLowerCase();
     const testmsg = `Please dispatch your ${shipName}`;
-    await playerOneGameboardDisplay.displayMessagePrompt(testmsg);
+    await userPrompts.displayMessagePrompt(testmsg);
     await playerBoardEvents.addShipPlacementEvents();
     const coodinates = await getCurrentcoordinates();
 
     // trys to update player's currentBoard property
     const success = humanPlayer.placeShipOnBoard(shipName, coodinates);
-    console.log(humanPlayer.currentBoard);
+    // console.log(humanPlayer.currentBoard);
 
     // throw error if humanPlayer.placeShipOnBoard returns false;
     if (!success) {
@@ -53,7 +54,7 @@ const playerOne = (() => {
   const placeShips = async (shipNames) => {
     if (shipNames.length === 0) {
       playerTwoGameboardDisplay.activateGameboard();
-      clearShipPlacementDisplayUI();
+      userPrompts.clearShipPlacementDisplayUI();
       playerBoardEvents.removeShipPlacementEvents();
       return;
     }
@@ -73,7 +74,7 @@ const playerOne = (() => {
     const shipsNames = Array.from(humanPlayer.ships.keys());
     const greeting = `Welcome, admiral ${humanPlayer.name}, it is time to dispatch your warships`;
     await playerOneGameboardDisplay.initialize(humanPlayer.getBoardSize());
-    await playerOneGameboardDisplay.displayMessagePrompt(greeting);
+    await userPrompts.displayMessagePrompt(greeting);
     await placeShips(shipsNames);
   };
 
@@ -93,15 +94,38 @@ const gameLoop = (() => {
 
   const playGameSequence = async () => {
     const playerOneAttackCoordinates = await getCurrentcoordinates();
-    const resultsPlayerOneAttack = playerTwo.receiveAttackCoordinates(playerOneAttackCoordinates);
+    const resultsPlayerOneAttack = await playerTwo.receiveAttackCoordinates(playerOneAttackCoordinates);
+    // console.log(resultsPlayerOneAttack);
+
+    playerTwoGameboardDisplay.wait();
+
+    if (resultsPlayerOneAttack.attackReceived) {
+      await userPrompts.displayAttackMessage(resultsPlayerOneAttack);
+      playerTwoGameboardDisplay.displayAttackResults({
+        hit: resultsPlayerOneAttack.shipHit,
+        coordinates: playerOneAttackCoordinates,
+      });
+    } else {
+      playerTwoGameboardDisplay.release();
+      await playGameSequence();
+    }
+
     if (!checkWinner()) {
       setTimeout(async () => {
-        const playerTwoAttackCoordinates = playerTwo.sendAttackCoordinates();
-        const resultsPlayerTwoAttack = playerOne.receiveAttackCoordinates(playerTwoAttackCoordinates);
-        console.log(resultsPlayerTwoAttack);
+        const playerTwoAttackCoordinates = await playerTwo.sendAttackCoordinates();
+        const resultsPlayerTwoAttack = await playerOne.receiveAttackCoordinates(playerTwoAttackCoordinates);
+
+        // console.log(resultsPlayerTwoAttack);
+        if (resultsPlayerTwoAttack.attackReceived) {
+          await userPrompts.displayAttackMessage(resultsPlayerTwoAttack);
+          await playerOneGameboardDisplay.displayAttackResults({
+            hit: resultsPlayerTwoAttack.shipHit,
+            coordinates: playerTwoAttackCoordinates,
+          });
+          playerTwoGameboardDisplay.release();
+        }
       }, 2000);
     }
-    console.log(resultsPlayerOneAttack);
 
     if (!checkWinner()) {
       await playGameSequence();

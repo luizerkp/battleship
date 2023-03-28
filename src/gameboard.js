@@ -65,6 +65,8 @@ class Gameboard {
     const results = {
       attackReceived: false,
       shipHit: false,
+      shipClass: null,
+      shipSunk: false,
     };
 
     if (!this.#inBoard([coordinates])) {
@@ -82,6 +84,8 @@ class Gameboard {
 
     if (cell.hasShip) {
       this.ships.get(cell.shipClass).hit();
+      results.shipClass = cell.shipClass;
+      results.shipSunk = this.ships.get(cell.shipClass).isSunk();
       results.shipHit = true;
     }
 
