@@ -38,7 +38,7 @@ const userPrompts = (() => {
     const introMessage = "Attack Coordinates received";
     const hitMessage = `It's a Hit!! on the opponent's ${results.shipClass} `;
     const missMessage = "It's Miss!!";
-    const sunkMessage = `Comgratulations!! The pponent's ${results.shipClass} has been sunk`;
+    const sunkMessage = `Comgratulations!! The opponent's ${results.shipClass} has been sunk`;
     await displayMessagePrompt(introMessage);
     if (results.shipHit) {
       await displayMessagePrompt(hitMessage);
@@ -46,7 +46,7 @@ const userPrompts = (() => {
       await displayMessagePrompt(missMessage);
     }
 
-    if (results.shiSunk) {
+    if (results.shipSunk) {
       await displayMessagePrompt(sunkMessage);
     }
   };

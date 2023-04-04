@@ -19,11 +19,14 @@ const playerTwo = (() => {
 
   const sendAttackCoordinates = () => computer.sendRandomAttack();
 
+  const getName = () => computer.name;
+
   return {
     initialize,
     checkLost,
     receiveAttackCoordinates,
     sendAttackCoordinates,
+    getName,
   };
 })();
 
@@ -82,16 +85,28 @@ const playerOne = (() => {
 
   const receiveAttackCoordinates = (coordinates) => humanPlayer.receiveAttack(coordinates);
 
+  const getName = () => humanPlayer.name;
+
   return {
     initialize,
     checkLost,
     receiveAttackCoordinates,
+    getName,
   };
 })();
 
 const gameLoop = (() => {
-  const checkWinner = () => playerOne.checkLost() && playerTwo.checkLost();
+  const checkWinner = () => {
+    const winner = {
+      victory: playerOne.checkLost() || playerTwo.checkLost(),
+      name: null,
+    };
 
+    if (playerOne.checkLost() || playerTwo.checkLost()) {
+      winner.name = playerOne.checkLost() ? playerTwo.getName() : playerOne.getName();
+    }
+    return winner;
+  };
   const playGameSequence = async () => {
     const playerOneAttackCoordinates = await getCurrentcoordinates();
     const resultsPlayerOneAttack = await playerTwo.receiveAttackCoordinates(playerOneAttackCoordinates);
@@ -101,6 +116,7 @@ const gameLoop = (() => {
 
     if (resultsPlayerOneAttack.attackReceived) {
       await userPrompts.displayAttackMessage(resultsPlayerOneAttack);
+      // console.log(resultsPlayerOneAttack);
       playerTwoGameboardDisplay.displayAttackResults({
         hit: resultsPlayerOneAttack.shipHit,
         coordinates: playerOneAttackCoordinates,
@@ -110,7 +126,7 @@ const gameLoop = (() => {
       await playGameSequence();
     }
 
-    if (!checkWinner()) {
+    if (!checkWinner().victory) {
       setTimeout(async () => {
         const playerTwoAttackCoordinates = await playerTwo.sendAttackCoordinates();
         const resultsPlayerTwoAttack = await playerOne.receiveAttackCoordinates(playerTwoAttackCoordinates);
@@ -127,17 +143,20 @@ const gameLoop = (() => {
       }, 2000);
     }
 
-    if (!checkWinner()) {
+    if (!checkWinner().victory) {
       await playGameSequence();
     }
+
+    return checkWinner().name;
   };
 
   const initializeGame = async ({ playerOneName, PlayerTwoName }) => {
     await playerOne.initialize(playerOneName);
-    console.log("player finished setting up");
+    // console.log("player finished setting up");
     playerTwo.initialize(PlayerTwoName);
     await playerBoardEvents.addAttackEvents();
-    playGameSequence();
+    const winner = await playGameSequence();
+    console.log(winner);
   };
 
   return {
