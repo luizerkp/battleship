@@ -1,4 +1,4 @@
-import { writeTextOneCharEachTime } from "./helpers";
+import { writeTextOneCharEachTime, craftAttackMessage } from "./helpers";
 
 const buildCellInfo = (x, y) => {
   const cellDiv = document.createElement("div");
@@ -21,11 +21,10 @@ const userPrompts = (() => {
     playerPrompts.textContent = "";
     await writeTextOneCharEachTime(playerPrompts, message);
 
-    // wait for 2 seconds before returning
     await new Promise((resolve) => {
       setTimeout(() => {
         resolve(document.body.classList.remove("wait"));
-      }, 1000);
+      }, 800);
     });
   };
 
@@ -34,20 +33,19 @@ const userPrompts = (() => {
     const directionSelectDiv = document.querySelector(".direction-select");
     directionSelectDiv.classList.add("hidden");
   };
-  const displayAttackMessage = async (results) => {
-    const introMessage = "Attack Coordinates received";
-    const hitMessage = `It's a Hit!! on the opponent's ${results.shipClass} `;
-    const missMessage = "It's Miss!!";
-    const sunkMessage = `Comgratulations!! The opponent's ${results.shipClass} has been sunk`;
-    await displayMessagePrompt(introMessage);
+
+  const displayAttackMessage = async ({ results, player }) => {
+    const message = craftAttackMessage({ results, player });
+    await displayMessagePrompt(message.introMessage);
+
     if (results.shipHit) {
-      await displayMessagePrompt(hitMessage);
+      await displayMessagePrompt(message.hitMessage);
     } else {
-      await displayMessagePrompt(missMessage);
+      await displayMessagePrompt(message.missMessage);
     }
 
     if (results.shipSunk) {
-      await displayMessagePrompt(sunkMessage);
+      await displayMessagePrompt(message.sunkMessage);
     }
   };
   return {
@@ -75,25 +73,34 @@ const playerOneGameboardDisplay = (() => {
   };
 
   const displayShipPlacement = async (coordinates) => {
-    const coodinateDivs = [];
+    const coordinateDivs = [];
     coordinates.forEach((coordinate) => {
       const currentDiv = document.querySelector(`.cell[data-x="${coordinate[0]}"][data-y="${coordinate[1]}"]`);
-      coodinateDivs.push(currentDiv);
+      coordinateDivs.push(currentDiv);
     });
 
-    coodinateDivs.forEach((div) => {
-      div.dataset.hasShip = "";
+    coordinateDivs.forEach((div) => {
       div.classList.add("has-ship");
     });
   };
 
-  // const wait = () => {
-  //   playerOneGameboard.classList.add("wait");
-  // };
+  const displayShipPlacementShipName = async (shipName) => {
+    playerOneGameboard.dataset.placeShip = shipName.toLowerCase();
+    const testmsg = `Please dispatch your ${shipName}`;
+    await userPrompts.displayMessagePrompt(testmsg);
+  };
 
-  // const release = () => {
-  //   playerOneGameboard.classList.remove("wait");
-  // };
+  const addShipPlacementPointerUI = () => {
+    playerOneGameboard.classList.add("cursor-pointer");
+  };
+
+  const clearShipPlacementDisplayUI = () => {
+    playerOneGameboard.dataset.placeShip = "";
+    playerOneGameboard.classList.remove("cursor-pointer");
+    playerOneGameboard.querySelectorAll(".cell").forEach((cell) => {
+      cell.classList.remove("highlight");
+    });
+  };
 
   const displayAttackResults = async ({ coordinates, hit }) => {
     const attackedCell = playerOneGameboard.querySelector(
@@ -105,9 +112,10 @@ const playerOneGameboardDisplay = (() => {
   return {
     initialize,
     displayShipPlacement,
-    // wait,
-    // release,
     displayAttackResults,
+    displayShipPlacementShipName,
+    addShipPlacementPointerUI,
+    clearShipPlacementDisplayUI,
   };
 })();
 
@@ -124,6 +132,7 @@ const playerTwoGameboardDisplay = (() => {
 
   const activateGameboard = () => {
     playerTwoGameboard.classList.add("active");
+    playerTwoGameboard.classList.add("cursor-crosshair");
   };
   const wait = () => {
     playerTwoGameboard.classList.add("wait");

@@ -10,8 +10,23 @@ const writeTextOneCharEachTime = async (element, content) => {
         clearInterval(interval);
         resolve();
       }
-    }, 30);
+    }, 35);
   });
+};
+
+const craftAttackMessage = ({ results, player }) => {
+  const ownershipMsg = player === "playerOne" ? "The enemy's" : "Your";
+  const joySadMsg = player === "playerOne" ? "Congratulations!!" : "Oh no!!";
+  const attacker = player === "playerOne" ? "Your" : "The enemy's";
+
+  const message = {
+    introMessage: `${attacker} attack coordinates received`,
+    hitMessage: `${ownershipMsg} ${results.shipClass} has been hit!!`,
+    missMessage: "...It's a Miss!!",
+    sunkMessage: `${joySadMsg} ${ownershipMsg} ${results.shipClass} has been sunk`,
+  };
+
+  return message;
 };
 
 const removeShakeAniamtionClass = (e) => {
@@ -34,4 +49,4 @@ const resetDisplayAfterShake = (e) => {
   }
 };
 
-export { writeTextOneCharEachTime, resetDisplayAfterShake };
+export { writeTextOneCharEachTime, resetDisplayAfterShake, craftAttackMessage };

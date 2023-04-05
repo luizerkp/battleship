@@ -13,20 +13,22 @@ body {
   justify-content: center;
   align-items: center;
   padding: 20px;
-
 }
 
 #main-container {
   flex: 1 0 auto;
   display: flex;
   flex-direction: column; 
+  justify-content: center;
   align-items: center;
 }
 
 .game-container {
-  justify-content: center;
   display: flex;
+  justify-content: center;
   gap: 4rem;
+  width: 100%;
+  
 }
 .gameboard {
   display: grid;
@@ -38,7 +40,14 @@ body {
   grid-template-rows: auto;
   visibility: hidden;
   transition: visivility 300ms ease-in-out, transform 350ms ease-in-out;
+}
+
+.cursor-pointer {
   cursor: pointer;
+}
+
+.cursor-crosshair {
+  cursor: crosshair;
 }
 
 .cell {
@@ -100,7 +109,26 @@ body {
   width: fit-content;
   height: auto;
   border-radius: 0.7rem;
-  
+}
+.winner {
+  flex-direction: column;
+  font-weight: bold;
+  color: rgb(255, 255, 255);
+  font-size: 2rem;
+}
+
+.winner h1 {
+  margin: 1rem 0;
+}
+
+.play-again {
+  cursor: pointer;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-size: 2rem;
+  font-weight: bolder;
+  color: #F9FAF8;
+  background-image: linear-gradient(-135deg, rgb(255, 0, 144) 20%, rgb(153, 51, 255) 100%);  
 }
 
 #name-input {
@@ -138,14 +166,8 @@ body {
 }
 
 .ship-hit {
-  background-color: #720606;
-  background-image:
-    linear-gradient(45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.1) 75%, transparent 75%, transparent),
-    linear-gradient(-45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.1) 75%, transparent 75%, transparent),
-    radial-gradient(circle at center, black 0%, black 20%, transparent 20%);
-  background-size: 100px 100px, 100px 100px, 50px 50px;
-  background-position: 0 0, 50px 50px, center;
-  border-radius: 50%;
+  background: radial-gradient(circle, #fff400 8%, #ba0505 55%);
+  clip-path: polygon(49% 0, 61% 19%, 100% 1%, 79% 36%, 97% 40%, 83% 53%, 96% 73%, 76% 74%, 80% 100%, 59% 79%, 46% 100%, 38% 81%, 0 100%, 19% 67%, 4% 62%, 19% 47%, 0 31%, 26% 30%, 13% 1%, 41% 21%);
 }
 
 .hit-miss {
@@ -218,8 +240,6 @@ body {
     rgba(0, 5, 44, 0.09) 0px 32px 16px;
 }
 
-
-
 /* Sticky Footer and credit */
 .footer {
     display: flex;
@@ -240,27 +260,91 @@ body {
 
 /* ########################################## Responsive layout ########################################################*/
 
-/* @media only screen and (max-width: 1200px) {
-
+@media only screen and (max-width: 1199px) {
+  .game-container {
+    align-items: center;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .gameboard {
+    width: 45vw;
+    height: 45vw;
+  }
+  .player-prompts {
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
 }
 
-@media only screen and (max-width: 650px) {
-
-}
-
-@media only screen and (max-width: 500px) {
-
+@media only screen and (max-width: 600px) {
+    .header {
+      height: 150px;
+    }
+    .header>img {
+      width: 450px;
+      height: auto;
+    }
+    .player-prompts {
+      font-size: 1.5rem;
+    }
     #github-logo>img {
         height: 20px;
         width: 20px;
     }
+    #name-input, .begin-btn {
+      font-size: 1rem;
+    }
+    .direction-select {
+      font-size: 1.25rem;
+    }
+    .direction-select button {
+      padding: 5px 15px;
+      margin: 10px 0;
+    }
+    .gameboard {
+      width: 50vw;
+      height: 50vw;
+    }
 }
 
- @media only screen and (max-width: 325px) {
+@media only screen and (max-width: 500px) {
+  .player-prompts {
+    font-size: 1.25rem;
+  }
+}
 
+ @media only screen and (max-width: 400px) {
+    .header {
+      height: 125px;
+      padding: 10px;
+    }
+
+    .player-prompts {
+      font-size: 1rem;
+    }
+
+    .header>img {
+      width: 300px;
+      height: auto;
+    }
+    .gameboard {
+      width: 60vw;
+      height: 60vw;
+    }
     .footer>p {
         font-size: 14px;
         margin: 8px;
     }
- } */
+    .modal-content {
+      flex-direction: column;
+    }
+    .direction-select button {
+      padding: 5px 10px;
+      margin: 10px 0;
+    }
+ }
 
+html {
+  visibility: visible;
+  opacity: 1;
+}

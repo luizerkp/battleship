@@ -2,6 +2,7 @@ import Player from "./Player";
 import { playerOneGameboardDisplay, playerTwoGameboardDisplay, userPrompts } from "./displayGameboard";
 import playerBoardEvents from "./events";
 import { getCurrentcoordinates } from "./coordinates";
+import displayWinnerModal from "./displayWinner";
 
 const playerTwo = (() => {
   let computer = null;
@@ -10,7 +11,6 @@ const playerTwo = (() => {
     computer = new Player("computer");
     playerTwoGameboardDisplay.initialize(computer.getBoardSize());
     computer.initAutoShipPlacement();
-    // console.log(computer.currentBoard);
   };
 
   const checkLost = () => computer.checkAllShipsSunk();
@@ -33,17 +33,20 @@ const playerTwo = (() => {
 const playerOne = (() => {
   let humanPlayer = null;
 
+  const clearShipPlacementUI = () => {
+    playerTwoGameboardDisplay.activateGameboard();
+    userPrompts.clearShipPlacementDisplayUI();
+    playerBoardEvents.removeShipPlacementEvents();
+    playerOneGameboardDisplay.clearShipPlacementDisplayUI();
+  };
+
   const placeShip = async (shipName) => {
-    const playerBoard = document.querySelector("[data-playerOne]");
-    playerBoard.dataset.placeShip = shipName.toLowerCase();
-    const testmsg = `Please dispatch your ${shipName}`;
-    await userPrompts.displayMessagePrompt(testmsg);
+    await playerOneGameboardDisplay.displayShipPlacementShipName(shipName);
     await playerBoardEvents.addShipPlacementEvents();
     const coodinates = await getCurrentcoordinates();
 
     // trys to update player's currentBoard property
     const success = humanPlayer.placeShipOnBoard(shipName, coodinates);
-    // console.log(humanPlayer.currentBoard);
 
     // throw error if humanPlayer.placeShipOnBoard returns false;
     if (!success) {
@@ -56,9 +59,6 @@ const playerOne = (() => {
   // use recursive call to avoid eslint no-await-in-loop error
   const placeShips = async (shipNames) => {
     if (shipNames.length === 0) {
-      playerTwoGameboardDisplay.activateGameboard();
-      userPrompts.clearShipPlacementDisplayUI();
-      playerBoardEvents.removeShipPlacementEvents();
       return;
     }
 
@@ -78,7 +78,9 @@ const playerOne = (() => {
     const greeting = `Welcome, admiral ${humanPlayer.name}, it is time to dispatch your warships`;
     await playerOneGameboardDisplay.initialize(humanPlayer.getBoardSize());
     await userPrompts.displayMessagePrompt(greeting);
+    playerOneGameboardDisplay.addShipPlacementPointerUI();
     await placeShips(shipsNames);
+    clearShipPlacementUI();
   };
 
   const checkLost = () => humanPlayer.checkAllShipsSunk();
@@ -98,7 +100,7 @@ const playerOne = (() => {
 const gameLoop = (() => {
   const checkWinner = () => {
     const winner = {
-      victory: playerOne.checkLost() || playerTwo.checkLost(),
+      winnerFound: playerOne.checkLost() || playerTwo.checkLost(),
       name: null,
     };
 
@@ -110,13 +112,11 @@ const gameLoop = (() => {
   const playGameSequence = async () => {
     const playerOneAttackCoordinates = await getCurrentcoordinates();
     const resultsPlayerOneAttack = await playerTwo.receiveAttackCoordinates(playerOneAttackCoordinates);
-    // console.log(resultsPlayerOneAttack);
 
     playerTwoGameboardDisplay.wait();
 
     if (resultsPlayerOneAttack.attackReceived) {
-      await userPrompts.displayAttackMessage(resultsPlayerOneAttack);
-      // console.log(resultsPlayerOneAttack);
+      await userPrompts.displayAttackMessage({ results: resultsPlayerOneAttack, player: "playerOne" });
       playerTwoGameboardDisplay.displayAttackResults({
         hit: resultsPlayerOneAttack.shipHit,
         coordinates: playerOneAttackCoordinates,
@@ -126,24 +126,23 @@ const gameLoop = (() => {
       await playGameSequence();
     }
 
-    if (!checkWinner().victory) {
+    if (!checkWinner().winnerFound) {
       setTimeout(async () => {
         const playerTwoAttackCoordinates = await playerTwo.sendAttackCoordinates();
         const resultsPlayerTwoAttack = await playerOne.receiveAttackCoordinates(playerTwoAttackCoordinates);
 
-        // console.log(resultsPlayerTwoAttack);
         if (resultsPlayerTwoAttack.attackReceived) {
-          await userPrompts.displayAttackMessage(resultsPlayerTwoAttack);
+          await userPrompts.displayAttackMessage({ results: resultsPlayerTwoAttack, player: "playerTwo" });
           await playerOneGameboardDisplay.displayAttackResults({
             hit: resultsPlayerTwoAttack.shipHit,
             coordinates: playerTwoAttackCoordinates,
           });
           playerTwoGameboardDisplay.release();
         }
-      }, 2000);
+      }, 800);
     }
 
-    if (!checkWinner().victory) {
+    if (!checkWinner().winnerFound) {
       await playGameSequence();
     }
 
@@ -152,11 +151,10 @@ const gameLoop = (() => {
 
   const initializeGame = async ({ playerOneName, PlayerTwoName }) => {
     await playerOne.initialize(playerOneName);
-    // console.log("player finished setting up");
     playerTwo.initialize(PlayerTwoName);
     await playerBoardEvents.addAttackEvents();
-    const winner = await playGameSequence();
-    console.log(winner);
+    const winnerName = await playGameSequence();
+    return displayWinnerModal(winnerName);
   };
 
   return {
