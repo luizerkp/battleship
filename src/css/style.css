@@ -274,6 +274,9 @@ body {
     margin-bottom: 1.5rem;
     text-align: center;
   }
+  .winner, .play-again {
+    font-size: 1rem;
+  }
 }
 
 @media only screen and (max-width: 600px) {
@@ -311,6 +314,9 @@ body {
   .player-prompts {
     font-size: 1.25rem;
   }
+  .winner, .play-again {
+    font-size: 0.8rem;
+  }
 }
 
  @media only screen and (max-width: 400px) {
@@ -341,6 +347,9 @@ body {
     .direction-select button {
       padding: 5px 10px;
       margin: 10px 0;
+    }
+    .winner, .play-again {
+      font-size: 0.6rem;
     }
  }
 
