@@ -18,12 +18,27 @@
   <script defer src="main.bundle.js"></script></head>
   <body>
     <header class="header">
-      <img src="c8e2947496d7f8804769.webp" alt="">
+      <img src="c8e2947496d7f8804769.webp" alt="Logo that says Battleship">
     </header>
     <div id="main-container">
-      <div class="gameboard" id="player-1"></div>
-      <div class="gamboard" id="player-2"></div>
+      <div class="player-prompts hidden" data-prompts></div>
+      <div class="direction-select hidden" data-direction>
+        <button type="button" class="direction" id="selected" value="yDirection" data-vertical data-selected>Vertical</button>
+        <button type="button" class="direction" data-horizontal value="xDirection">Horizontal</button>
+      </div>
+      <div class="game-container">
+        <div class="gameboard" data-playerOne></div>
+        <div class="gameboard" data-playerTwo></div>        
+      </div>
     </div>
-    <div class="modal-content"></div>
+    <div class="modal">
+      <div class="modal-content">
+          <input type="text" name="name-input" id ="name-input" 
+          placeholder="What is your name Admiral?"
+          aria-label="Input for player name"
+          onclick="this.placeholder = 'What is your name Admiral?'">
+          <button class="begin-btn">Begin</button>  
+      </div>
+    </div>
   </body>
 </html>
