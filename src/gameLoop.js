@@ -1,5 +1,5 @@
 import Player from "./Player";
-import { playerOneGameboardDisplay, playerTwoGameboardDisplay, userPrompts } from "./displayGameboard";
+import { playerOneGameboardDisplay, playerTwoGameboardDisplay, userPrompts } from "./displayModules";
 import playerBoardEvents from "./events";
 import { getCurrentcoordinates } from "./coordinates";
 import displayWinnerModal from "./displayWinner";
